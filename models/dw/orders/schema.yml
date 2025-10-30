@@ -1,0 +1,336 @@
+version: 2
+
+models:
+  - name: dw__orders__dim_customer
+    description: "Customer dimension table containing customer information from the ERP system"
+    columns:
+      - name: customer_key
+        description: "Surrogate key for the customer dimension"
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Natural key/business key for the customer from the source system"
+        tests:
+          - not_null
+      - name: customer_name
+        description: "Customer's full name"
+      - name: address
+        description: "Customer's address"
+      - name: phone
+        description: "Customer's phone number"
+      - name: account_balance
+        description: "Customer's account balance"
+      - name: market_segment
+        description: "Customer's market segment category"
+      - name: nation_key
+        description: "Foreign key to the nation"
+      - name: nation_name
+        description: "Name of the nation where the customer is located"
+      - name: region_key
+        description: "Foreign key to the region"
+      - name: region_name
+        description: "Name of the region where the customer is located"
+      - name: dw_source_name
+        description: "Source system name for the record"
+      - name: dw_created_datetime
+        description: "Timestamp when this record was created in the data warehouse"
+      - name: dw_updated_datetime
+        description: "Timestamp when this record was last updated in the data warehouse" 
+      - name: dw_is_deleted_flag
+        description: "Flag indicating if the record is logically deleted"
+
+  - name: dw__orders__dim_date
+    description: "Date dimension table with calendar attributes for date-based analysis"
+    columns:
+      - name: date_key
+        description: "Primary key for the date dimension"
+        tests:
+          - unique
+          - not_null
+      - name: full_date
+        description: "Full date in date format"
+        tests:
+          - not_null
+      - name: year_nbr
+        description: "Year number (YYYY)"
+      - name: month_nbr
+        description: "Month number (1-12)"
+      - name: month_name
+        description: "Month name"
+      - name: day_of_month
+        description: "Day of month (1-31)"
+      - name: day_of_week_nbr
+        description: "Day of week number (1-7, where 1 is Sunday)"
+      - name: day_of_week_name
+        description: "Day of week name"
+      - name: week_of_year_nbr
+        description: "Week of year number"
+      - name: quarter_nbr
+        description: "Quarter number (1-4)"
+      - name: quarter_name
+        description: "Quarter name (e.g. Q1-2020)"
+      - name: year_month_nbr
+        description: "Year and month as number (YYYYMM)"
+      - name: year_month_name
+        description: "Year and month as name (YYYY-MM)"
+      - name: year_week_nbr
+        description: "Year and week number"
+      - name: is_last_day_of_month_flag
+        description: "Flag indicating if date is the last day of the month"
+      - name: is_first_day_of_month_flag
+        description: "Flag indicating if date is the first day of the month"
+      - name: is_sunday_flag
+        description: "Flag indicating if date is a Sunday"
+      - name: is_saturday_flag
+        description: "Flag indicating if date is a Saturday"
+      - name: is_weekday_flag
+        description: "Flag indicating if date is a weekday (Monday-Friday)"
+      - name: is_weekend_flag
+        description: "Flag indicating if date is a weekend (Saturday-Sunday)"
+      - name: dw_source_name
+        description: "Source system name for the record"
+      - name: dw_created_datetime
+        description: "Timestamp when this record was created in the data warehouse"
+      - name: dw_updated_datetime
+        description: "Timestamp when this record was last updated in the data warehouse" 
+      - name: dw_is_deleted_flag
+        description: "Flag indicating if the record is logically deleted"
+
+  - name: dw__orders__dim_order
+    description: "Order dimension table containing order header information from the ERP system"
+    columns:
+      - name: order_key
+        description: "Surrogate key for the order dimension"
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: "Natural key/business key for the order from the source system"
+        tests:
+          - not_null
+      - name: order_date
+        description: "Date when the order was placed"
+      - name: order_status
+        description: "Current status of the order"
+        tests:
+          - accepted_values:
+              values: ['O', 'F', 'P']
+      - name: order_priority
+        description: "Priority level assigned to the order"
+      - name: clerk
+        description: "ID of the clerk who processed the order"
+      - name: ship_priority
+        description: "Shipping priority assigned to the order"
+      - name: dw_source_name
+        description: "Source system name for the record"
+      - name: dw_created_datetime
+        description: "Timestamp when this record was created in the data warehouse"
+      - name: dw_updated_datetime
+        description: "Timestamp when this record was last updated in the data warehouse" 
+      - name: dw_is_deleted_flag
+        description: "Flag indicating if the record is logically deleted"
+
+  - name: dw__orders__dim_part
+    description: "Part dimension table containing product information from the ERP system"
+    columns:
+      - name: part_key
+        description: "Surrogate key for the part dimension"
+        tests:
+          - unique
+          - not_null
+      - name: part_id
+        description: "Natural key/business key for the part from the source system"
+        tests:
+          - not_null
+      - name: part_name
+        description: "Name of the part/product"
+      - name: manufacturer
+        description: "Manufacturer of the part"
+      - name: brand
+        description: "Brand of the part"
+      - name: type
+        description: "Type/category of the part"
+      - name: size
+        description: "Size of the part"
+      - name: container
+        description: "Container type for the part"
+      - name: retail_price
+        description: "Retail price of the part"
+      - name: dw_source_name
+        description: "Source system name for the record"
+      - name: dw_created_datetime
+        description: "Timestamp when this record was created in the data warehouse"
+      - name: dw_updated_datetime
+        description: "Timestamp when this record was last updated in the data warehouse" 
+      - name: dw_is_deleted_flag
+        description: "Flag indicating if the record is logically deleted"
+
+  - name: dw__orders__dim_supplier
+    description: "Supplier dimension table containing supplier information from the ERP system"
+    columns:
+      - name: supplier_key
+        description: "Surrogate key for the supplier dimension"
+        tests:
+          - unique
+          - not_null
+      - name: supplier_id
+        description: "Natural key/business key for the supplier from the source system"
+        tests:
+          - not_null
+      - name: supplier_name
+        description: "Name of the supplier"
+      - name: address
+        description: "Supplier's address"
+      - name: phone
+        description: "Supplier's phone number"
+      - name: account_balance
+        description: "Supplier's account balance"
+      - name: nation_key
+        description: "Foreign key to the nation"
+      - name: nation_name
+        description: "Name of the nation where the supplier is located"
+      - name: region_key
+        description: "Foreign key to the region"
+      - name: region_name
+        description: "Name of the region where the supplier is located"
+      - name: dw_source_name
+        description: "Source system name for the record"
+      - name: dw_created_datetime
+        description: "Timestamp when this record was created in the data warehouse"
+      - name: dw_updated_datetime
+        description: "Timestamp when this record was last updated in the data warehouse" 
+      - name: dw_is_deleted_flag
+        description: "Flag indicating if the record is logically deleted"
+
+  - name: dw__orders__fact_order
+    description: "Order fact table containing order header metrics from the ERP system"
+    columns:
+      - name: order_id
+        description: "Natural key/business key for the order"
+        tests:
+          - not_null
+      - name: order_key
+        description: "Foreign key to the order dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dw__orders__dim_order')
+              field: order_key
+      - name: customer_key
+        description: "Foreign key to the customer dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dw__orders__dim_customer')
+              field: customer_key
+      - name: order_date_key
+        description: "Foreign key to the date dimension for order date"
+        tests:
+          - relationships:
+              to: ref('dw__orders__dim_date')
+              field: date_key
+      - name: order_count
+        description: "Count of orders (always 1, used for aggregations)"
+      - name: total_price
+        description: "Total price of the order"
+      - name: dw_source_name
+        description: "Source system name for the record"
+      - name: dw_created_datetime
+        description: "Timestamp when this record was created in the data warehouse"
+      - name: dw_updated_datetime
+        description: "Timestamp when this record was last updated in the data warehouse" 
+      - name: dw_is_deleted_flag
+        description: "Flag indicating if the record is logically deleted"
+    
+  - name: dw__orders__fact_order_item
+    description: "Order line item fact table containing order item metrics from the ERP system"
+    columns:
+      - name: order_id
+        description: "Natural key/business key for the order"
+        tests:
+          - not_null
+      - name: order_key
+        description: "Foreign key to the order dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dw__orders__dim_order')
+              field: order_key
+      - name: customer_key
+        description: "Foreign key to the customer dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dw__orders__dim_customer')
+              field: customer_key
+      - name: part_key
+        description: "Foreign key to the part dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dw__orders__dim_part')
+              field: part_key
+      - name: supplier_key
+        description: "Foreign key to the supplier dimension"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dw__orders__dim_supplier')
+              field: supplier_key
+      - name: line_number
+        description: "Line item number within the order"
+        tests:
+          - not_null
+      - name: quantity
+        description: "Quantity of the part ordered"
+      - name: extended_price
+        description: "Extended price for the line item (quantity * unit price)"
+      - name: discount
+        description: "Discount percentage applied to the line item"
+      - name: tax
+        description: "Tax percentage applied to the line item"
+      - name: return_flag
+        description: "Return flag for the line item"
+        tests:
+          - accepted_values:
+              values: ['R', 'A', 'N']
+      - name: line_status
+        description: "Status of the line item"
+        tests:
+          - accepted_values:
+              values: ['O', 'F']
+      - name: ship_date_key
+        description: "Foreign key to the date dimension for ship date"
+        tests:
+          - relationships:
+              to: ref('dw__orders__dim_date')
+              field: date_key
+      - name: commit_date_key
+        description: "Foreign key to the date dimension for commit date"
+        tests:
+          - relationships:
+              to: ref('dw__orders__dim_date')
+              field: date_key
+      - name: receipt_date_key
+        description: "Foreign key to the date dimension for receipt date"
+        tests:
+          - relationships:
+              to: ref('dw__orders__dim_date')
+              field: date_key
+      - name: ship_instructions
+        description: "Special shipping instructions for the line item"
+      - name: ship_mode
+        description: "Shipping mode used for the line item"
+      - name: discounted_price
+        description: "Price after discount (extended_price * (1 - discount))"
+      - name: final_price
+        description: "Final price after discount and tax (discounted_price * (1 + tax))"
+      - name: dw_source_name
+        description: "Source system name for the record"
+      - name: dw_created_datetime
+        description: "Timestamp when this record was created in the data warehouse"
+      - name: dw_updated_datetime
+        description: "Timestamp when this record was last updated in the data warehouse" 
+      - name: dw_is_deleted_flag
+        description: "Flag indicating if the record is logically deleted"
