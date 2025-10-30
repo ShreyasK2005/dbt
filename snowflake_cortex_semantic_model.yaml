@@ -1,0 +1,908 @@
+name: ORDERS
+tables:
+  - name: DIM_CUSTOMER
+    base_table:
+      database: DW
+      schema: ORDERS
+      table: DIM_CUSTOMER
+    primary_key:
+      columns:
+        - CUSTOMER_KEY
+    dimensions:
+      - name: ACCOUNT_BALANCE
+        synonyms:
+          - account_value
+          - current_balance
+          - balance_amount
+          - account_total
+          - outstanding_balance
+          - account_status
+          - current_account_value
+          - balance_figure
+        description: The current balance of the customer's account, representing the total amount of money the customer owes or is owed, rounded to two decimal places.
+        expr: ACCOUNT_BALANCE
+        data_type: NUMBER(12,2)
+      - name: ADDRESS
+        synonyms:
+          - location
+          - street_address
+          - mailing_address
+          - residence
+          - physical_address
+          - mailing_location
+          - geographical_address
+        description: The physical location where the customer resides or receives mail and other correspondence.
+        expr: ADDRESS
+        data_type: VARCHAR(40)
+      - name: CUSTOMER_ID
+        synonyms:
+          - customer_key_id
+          - client_id
+          - account_id
+          - customer_number
+          - client_number
+        description: Unique identifier for a customer in the system.
+        expr: CUSTOMER_ID
+        data_type: NUMBER(38,0)
+      - name: CUSTOMER_KEY
+        synonyms:
+          - customer_id_key
+          - client_identifier
+          - customer_reference
+          - client_code
+        description: Unique identifier for a customer.
+        expr: CUSTOMER_KEY
+        data_type: VARCHAR(128)
+      - name: CUSTOMER_NAME
+        synonyms:
+          - customer_title
+          - client_name
+          - account_holder
+          - account_name
+          - client_title
+          - patron_name
+          - buyer_name
+        description: The full name of the customer.
+        expr: CUSTOMER_NAME
+        data_type: VARCHAR(25)
+      - name: MARKET_SEGMENT
+        synonyms:
+          - market_category
+          - customer_category
+          - target_market
+          - market_group
+          - customer_segment
+          - demographic_segment
+          - market_niche
+        description: The market segment to which the customer belongs, such as "Consumer", "Corporate", "Government", etc.
+        expr: MARKET_SEGMENT
+        data_type: VARCHAR(10)
+      - name: NATION_KEY
+        synonyms:
+          - country_id
+          - nation_code
+          - national_identifier
+          - country_code
+          - nation_number
+        description: Unique identifier for the nation where the customer resides.
+        expr: NATION_KEY
+        data_type: NUMBER(38,0)
+      - name: NATION_NAME
+        synonyms:
+          - country_name
+          - nation_title
+          - geographical_area
+          - land_name
+          - country_title
+        description: The name of the country where the customer is located.
+        expr: NATION_NAME
+        data_type: VARCHAR(25)
+      - name: PHONE
+        synonyms:
+          - telephone
+          - contact_number
+          - mobile_number
+          - landline
+          - phone_number
+        description: The customer's phone number.
+        expr: PHONE
+        data_type: VARCHAR(15)
+      - name: REGION_KEY
+        synonyms:
+          - region_id
+          - geographic_area_code
+          - territory_code
+          - area_key
+          - zone_id
+        description: Unique identifier for a geographic region where the customer is located.
+        expr: REGION_KEY
+        data_type: NUMBER(38,0)
+      - name: REGION_NAME
+        synonyms:
+          - geographic_region
+          - area_name
+          - zone_name
+          - location_name
+          - area_description
+          - geographic_area
+          - regional_description
+        description: The geographical region where the customer is located.
+        expr: REGION_NAME
+        data_type: VARCHAR(25)
+  - name: DIM_ORDER
+    base_table:
+      database: DW
+      schema: ORDERS
+      table: DIM_ORDER
+    primary_key:
+      columns:
+        - ORDER_KEY
+    dimensions:
+      - name: CLERK
+        synonyms:
+          - salesperson
+          - sales_rep
+          - sales_agent
+          - order_taker
+          - order_processor
+          - customer_service_rep
+          - staff_member
+          - employee
+          - representative
+        description: The name of the sales clerk who took the order.
+        expr: CLERK
+        data_type: VARCHAR(15)
+        sample_values:
+          - Clerk#000000251
+          - Clerk#000000933
+          - Clerk#000000778
+      - name: ORDER_DATE
+        synonyms:
+          - order_timestamp
+          - purchase_date
+          - transaction_date
+          - sale_date
+          - order_creation_date
+          - order_placement_date
+          - order_registration_date
+        description: The date on which the order was placed.
+        expr: ORDER_DATE
+        data_type: DATE
+      - name: ORDER_ID
+        synonyms:
+          - order_number
+          - purchase_id
+          - transaction_id
+          - order_reference
+          - order_code
+          - invoice_number
+          - purchase_order_number
+          - sales_order_id
+        description: Unique identifier for an order.
+        expr: ORDER_ID
+        data_type: NUMBER(38,0)
+      - name: ORDER_KEY
+        synonyms:
+          - order_id_key
+          - order_number_key
+        description: Unique identifier for an order.
+        expr: ORDER_KEY
+        data_type: VARCHAR(128)
+      - name: ORDER_PRIORITY
+        synonyms:
+          - order_importance
+          - priority_level
+          - order_urgency
+          - shipping_priority_level
+          - order_severity
+          - priority_code
+          - order_classification
+        description: The priority level of the order, indicating its urgency or importance
+        expr: ORDER_PRIORITY
+        data_type: VARCHAR(15)
+        sample_values:
+          - 4-NOT SPECIFIED
+          - 2-HIGH
+          - 1-URGENT
+      - name: ORDER_STATUS
+        synonyms:
+          - order_condition
+          - status_code
+          - order_state
+          - fulfillment_status
+          - shipment_status
+          - delivery_status
+          - processing_status
+        description: The current status of the order, represented by a single character code.
+        expr: ORDER_STATUS
+        data_type: VARCHAR(1)
+        sample_values:
+          - F
+          - O
+          - P
+      - name: SHIP_PRIORITY
+        synonyms:
+          - shipping_priority
+          - delivery_priority
+          - transport_priority
+          - freight_priority
+          - dispatch_priority
+          - order_shipping_level
+          - shipment_importance_level
+        description: The priority level assigned to the shipment, indicating the order in which it should be processed and dispatched, with higher values indicating higher priority.
+        expr: SHIP_PRIORITY
+        data_type: NUMBER(38,0)
+  - name: FACT_ORDER
+    base_table:
+      database: DW
+      schema: ORDERS
+      table: FACT_ORDER
+    dimensions:
+      - name: CUSTOMER_KEY
+        synonyms:
+          - customer_id
+          - client_key
+          - buyer_id
+          - account_number
+          - client_identifier
+          - customer_identifier
+          - patron_key
+          - subscriber_id
+        description: Unique identifier for the customer who placed the order.
+        expr: CUSTOMER_KEY
+        data_type: VARCHAR(128)
+      - name: ORDER_ID
+        synonyms:
+          - order_number
+          - purchase_id
+          - transaction_id
+          - order_code
+          - invoice_number
+        description: Unique identifier for each order.
+        expr: ORDER_ID
+        data_type: NUMBER(38,0)
+      - name: ORDER_KEY
+        synonyms:
+          - order_id_key
+        description: Unique identifier for an order.
+        expr: ORDER_KEY
+        data_type: VARCHAR(128)
+    facts:
+      - name: ORDER_COUNT
+        synonyms:
+          - order_quantity
+          - total_orders
+          - order_total
+          - number_of_orders
+          - order_volume
+        description: The total number of orders placed by a customer.
+        expr: ORDER_COUNT
+        data_type: NUMBER(1,0)
+        default_aggregation: 1
+      - name: TOTAL_ORDER_PRICE
+        synonyms:
+          - total_cost
+          - overall_price
+          - total_amount
+          - total_value
+          - total_expense
+          - total_spend
+          - total_revenue
+          - total_invoice_value
+        description: The total price of the order, including all items and any applicable taxes or discounts, rounded to two decimal places.
+        expr: TOTAL_PRICE
+        data_type: NUMBER(12,2)
+        default_aggregation: 1
+    time_dimensions:
+      - name: ORDER_DATE_KEY
+        synonyms:
+          - order_date
+          - order_timestamp
+          - purchase_date
+          - transaction_date
+          - sales_date
+          - order_creation_date
+          - order_placement_date
+          - order_timestamp_key
+        description: The date on which the order was placed.
+        expr: ORDER_DATE_KEY
+        data_type: DATE
+  - name: DIM_PART
+    base_table:
+      database: DW
+      schema: ORDERS
+      table: DIM_PART
+    dimensions:
+      - name: PART_KEY
+        expr: PART_KEY
+        data_type: VARCHAR(128)
+        description: Unique identifier for a part in the inventory management system.
+        sample_values:
+          - 124ac1af26c1ada980ba1c0a04f02d4473b9fe46b5a2f86717b71fbfdf0bc193
+          - 29348e196fbc1400011b9d0f3e1ee5cc275047cb07df7fe639872768c8c1718e
+          - 0c3c77c011a759dc501d7f7b128751b2d15e8abce313f39dfed994af77f9eec8
+        synonyms:
+          - part_id_key
+      - name: PART_NAME
+        expr: PART_NAME
+        data_type: VARCHAR(55)
+        description: This column represents the color or finish of a part, providing a descriptive name for the visual appearance of the part.
+        sample_values:
+          - metallic rosy gainsboro dark spring
+          - deep pink chocolate thistle lime
+          - azure burnished tomato mint spring
+        synonyms:
+          - product_name
+          - item_name
+          - part_description
+          - component_name
+          - product_description
+          - item_description
+      - name: MANUFACTURER
+        expr: MANUFACTURER
+        data_type: VARCHAR(25)
+        description: The name of the manufacturer of the part.
+        sample_values:
+          - Manufacturer#3
+          - Manufacturer#5
+          - Manufacturer#4
+        synonyms:
+          - maker
+          - producer
+          - supplier
+          - creator
+          - builder
+          - vendor
+          - originator
+          - assembler
+          - fabricator
+      - name: BRAND
+        expr: BRAND
+        data_type: VARCHAR(10)
+        description: The brand name of the part, used to categorize and group similar parts by manufacturer or supplier.
+        sample_values:
+          - Brand#15
+          - Brand#24
+          - Brand#45
+        synonyms:
+          - maker
+          - manufacturer
+          - label
+          - trademark
+          - nameplate
+          - marque
+      - name: TYPE
+        expr: TYPE
+        data_type: VARCHAR(25)
+        description: The TYPE dimension represents the style or finish of a part, indicating whether it is a promotional item, standard, or economy version, and whether it has a brushed or burnished steel finish.
+        sample_values:
+          - PROMO BURNISHED STEEL
+          - STANDARD BRUSHED STEEL
+          - ECONOMY BRUSHED STEEL
+        synonyms:
+          - category
+          - classification
+          - kind
+          - sort
+          - genre
+          - designation
+          - label
+          - class
+      - name: CONTAINER
+        expr: CONTAINER
+        data_type: VARCHAR(10)
+        description: The type of packaging used for a part, such as a wrap, can, or pack.
+        sample_values:
+          - WRAP CAN
+          - SM PACK
+          - WRAP PACK
+        synonyms:
+          - package
+          - packaging
+          - holder
+          - vessel
+          - wrapper
+          - envelope
+          - box
+          - case
+          - wrapping
+      - name: PART_ID
+        expr: PART_ID
+        data_type: NUMBER(38,0)
+        description: Unique identifier for a part in the inventory.
+        sample_values:
+          - '40012'
+          - '40057'
+          - '40101'
+        synonyms:
+          - part_number
+          - product_id
+          - item_id
+          - component_id
+          - part_code
+          - product_code
+      - name: SIZE
+        expr: SIZE
+        data_type: NUMBER(38,0)
+        description: The size of a part, measured in a unit of measurement not specified in the data, with possible values including 27, 17, and 2.
+        sample_values:
+          - '27'
+          - '17'
+          - '2'
+        synonyms:
+          - length
+          - dimension
+          - magnitude
+          - capacity
+          - volume
+          - measurement
+          - scale
+          - extent
+      - name: RETAIL_PRICE
+        expr: RETAIL_PRICE
+        data_type: NUMBER(12,2)
+        description: The retail price of a part, representing the manufacturer's suggested selling price to the end customer.
+        sample_values:
+          - '941.00'
+          - '943.00'
+          - '965.02'
+        synonyms:
+          - list_price
+          - sale_price
+          - unit_price
+          - selling_price
+          - market_price
+          - sticker_price
+          - price_tag
+          - cost
+          - selling_cost
+    facts: []
+    primary_key:
+      columns:
+        - PART_KEY
+  - name: DIM_SUPPLIER
+    base_table:
+      database: DW
+      schema: ORDERS
+      table: DIM_SUPPLIER
+    dimensions:
+      - name: SUPPLIER_KEY
+        expr: SUPPLIER_KEY
+        data_type: VARCHAR(128)
+        description: Unique identifier for a supplier in the system, used to link to supplier information across the database.
+        sample_values:
+          - a95b1c421258e20c668cab98bd16737dc7a95c7944f8bfbfeb9c499fe4f2e46c
+          - 722c67c5a058e415ceadd44d9e9078f05f579944440ab327c1e1a1a0df3287a5
+          - bebee65aecd067d4eccc0df9e39b3ec444ae6f21f902f3b635096de4d570c426
+        synonyms: []
+      - name: SUPPLIER_NAME
+        expr: SUPPLIER_NAME
+        data_type: VARCHAR(25)
+        description: The name of the supplier, uniquely identified by a supplier number.
+        sample_values:
+          - Supplier#000000001
+          - Supplier#000000002
+          - Supplier#000000003
+        synonyms:
+          - supplier_title
+          - vendor_name
+          - provider_name
+          - company_name
+          - organization_name
+          - business_name
+      - name: ADDRESS
+        expr: ADDRESS
+        data_type: VARCHAR(40)
+        description: The physical location of the supplier.
+        sample_values:
+          - ' N kD4on9OM Ipw3,gf0JBoQDd7tgrzrddZ'
+          - 89eJ5ksX3ImxJQBvxObC,
+          - q1,G3Pj6OjIuUYfUoH18BFTKP5aU9bEV3
+        synonyms:
+          - location
+          - street_address
+          - mailing_address
+          - physical_address
+          - residence
+          - mailing_location
+          - geographical_address
+      - name: PHONE
+        expr: PHONE
+        data_type: VARCHAR(15)
+        description: The phone number of the supplier.
+        sample_values:
+          - 27-918-335-1736
+          - 15-679-861-2259
+          - 11-383-516-1199
+        synonyms:
+          - telephone
+          - contact_number
+          - phone_number
+          - mobile_number
+          - landline
+          - contact_info
+          - dial_number
+      - name: SUPPLIER_ID
+        expr: SUPPLIER_ID
+        data_type: NUMBER(38,0)
+        description: Unique identifier for a supplier in the system.
+        sample_values:
+          - '1'
+          - '2'
+          - '3'
+        synonyms:
+          - supplier_number
+          - vendor_id
+          - provider_id
+          - supplier_code
+          - supplier_identifier
+      - name: ACCOUNT_BALANCE
+        expr: ACCOUNT_BALANCE
+        data_type: NUMBER(12,2)
+        description: The current balance of the supplier's account, representing the amount owed to or by the supplier.
+        sample_values:
+          - '5755.94'
+          - '4032.68'
+          - '4192.40'
+        synonyms:
+          - account_value
+          - current_balance
+          - balance_amount
+          - account_total
+          - outstanding_balance
+          - account_status
+          - financial_balance
+          - current_account_value
+    facts: []
+    primary_key:
+      columns:
+        - SUPPLIER_KEY
+  - name: FACT_ORDER_ITEM
+    base_table:
+      database: DW
+      schema: ORDERS
+      table: FACT_ORDER_ITEM
+    dimensions:
+      - name: ORDER_KEY
+        expr: ORDER_KEY
+        data_type: VARCHAR(128)
+        description: Unique identifier for an order.
+        sample_values:
+          - 7b24155d243c1b4626b931db6ab8d8a1f9fe5695d9538d2f233c2f31cb4ff3f4
+          - 4a428ec4c1a77284e13c6d64a5d5fc6b8a38c92fcdc07257c5ad76fe86cc9850
+          - 4d25e0bbcd8e7515b2103fd3d08292f24146ac9b7045d0a407aadb6574017b0d
+        synonyms:
+          - order_id
+          - order_identifier
+          - purchase_key
+          - transaction_key
+          - order_reference
+      - name: CUSTOMER_KEY
+        expr: CUSTOMER_KEY
+        data_type: VARCHAR(128)
+        description: Unique identifier for the customer who placed the order.
+        sample_values:
+          - 90eda47a0bf020139e57936a83292ab258d344f56a9b5d119a1e72fcb1053998
+          - 03b2a40bd390e014c9c481dbe422262fe8be3e2e6d6dda5b472fd70108ac3a02
+          - 445a3e88a5e9e86d011c4daf25f52a42a4a2e242706685acfffd40fb8ee3fd2c
+        synonyms:
+          - customer_id
+          - client_id
+          - buyer_id
+          - account_number
+          - client_identifier
+          - customer_identifier
+          - account_key
+          - buyer_key
+      - name: PART_KEY
+        expr: PART_KEY
+        data_type: VARCHAR(128)
+        description: Unique identifier for a part or product in the order.
+        sample_values:
+          - 4aa36f22cc9cd4f11bb47c017637f6f08be9a6e9d7daefb9e19d947f7dd21613
+          - c10ed54420a4ae913dc803a91c998724c4209c0859f3d07385240997ddb4b0eb
+          - 137abc6ae5b6a679283a94439c32a9433827fc4faff685afc252dd9f95f7e284
+        synonyms:
+          - product_key
+          - item_key
+          - component_key
+          - material_key
+          - part_number
+          - item_id
+          - product_id
+          - component_id
+      - name: SUPPLIER_KEY
+        expr: SUPPLIER_KEY
+        data_type: VARCHAR(128)
+        description: Unique identifier for the supplier of the ordered item.
+        sample_values:
+          - b407dd7690180cb290f5a0d13770c39a53d09271bdadf925d3b4e99ee0046662
+          - 149148b92fa29609259e8703207d53c12c22d7a904724646ce6789fd7e898f9c
+          - 013a5aba13a42ebc7fad53ae50755f7950c03eaa68d1671ebbd55bbbaaed1e19
+        synonyms:
+          - vendor_id
+          - provider_key
+          - supplier_id
+          - provider_identifier
+          - vendor_identifier
+      - name: RETURN_FLAG
+        expr: RETURN_FLAG
+        data_type: VARCHAR(1)
+        description: 'Indicates whether the order item was returned, with values: A (All returned), N (Not returned), and R (Partially returned).'
+        sample_values:
+          - A
+          - 'N'
+          - R
+        synonyms:
+          - return_status
+          - return_indicator
+          - return_code
+          - refund_flag
+          - cancellation_status
+      - name: LINE_STATUS
+        expr: LINE_STATUS
+        data_type: VARCHAR(1)
+        description: The status of the order line, where F indicates the order line has been fulfilled and O indicates the order line is open.
+        sample_values:
+          - F
+          - O
+        synonyms:
+          - order_status
+          - item_status
+          - line_condition
+          - status_code
+          - order_line_state
+      - name: SHIP_INSTRUCTIONS
+        expr: SHIP_INSTRUCTIONS
+        data_type: VARCHAR(25)
+        description: Special instructions provided by the customer for shipping their order.
+        sample_values:
+          - NONE
+          - COLLECT COD
+          - DELIVER IN PERSON
+        synonyms:
+          - shipping_notes
+          - delivery_guidelines
+          - handling_instructions
+          - freight_directions
+          - transportation_guidelines
+      - name: SHIP_MODE
+        expr: SHIP_MODE
+        data_type: VARCHAR(10)
+        description: The mode of transportation used to ship the order item, such as truck, mail, or ship.
+        sample_values:
+          - TRUCK
+          - MAIL
+          - SHIP
+        synonyms:
+          - shipping_method
+          - delivery_mode
+          - transportation_type
+          - freight_mode
+          - logistics_mode
+          - delivery_type
+      - name: ORDER_ID
+        expr: ORDER_ID
+        data_type: NUMBER(38,0)
+        description: Unique identifier for the order that the item belongs to.
+        sample_values:
+          - '234880'
+          - '234818'
+          - '234817'
+        synonyms:
+          - order_number
+          - purchase_id
+          - transaction_id
+          - invoice_number
+          - sales_order_number
+          - order_reference
+    time_dimensions:
+      - name: SHIP_DATE_KEY
+        expr: SHIP_DATE_KEY
+        data_type: DATE
+        description: The date on which the order item was shipped.
+        sample_values:
+          - '2021-05-24'
+          - '2020-08-07'
+          - '2020-03-01'
+        synonyms:
+          - shipment_date
+          - dispatch_date
+          - delivery_date
+          - shipping_date_key
+          - order_ship_date
+          - date_shipped
+      - name: COMMIT_DATE_KEY
+        expr: COMMIT_DATE_KEY
+        data_type: DATE
+        description: Date when the order item was committed or confirmed.
+        sample_values:
+          - '2023-06-01'
+          - '2021-01-23'
+          - '2018-04-02'
+        synonyms:
+          - commit_timestamp
+          - confirmation_date
+          - confirmation_timestamp
+          - order_commit_date
+          - order_confirmation_date
+          - order_commit_timestamp
+      - name: RECEIPT_DATE_KEY
+        expr: RECEIPT_DATE_KEY
+        data_type: DATE
+        description: The date on which the order was received.
+        sample_values:
+          - '2022-12-17'
+          - '2019-03-02'
+          - '2020-04-18'
+        synonyms:
+          - receipt_date
+          - delivery_date
+          - arrival_date
+          - received_on
+          - date_received
+          - date_delivered
+    facts:
+      - name: LINE_NUMBER
+        expr: LINE_NUMBER
+        data_type: NUMBER(38,0)
+        description: A unique identifier for each item within an order, representing the sequence in which the items were added to the order.
+        sample_values:
+          - '1'
+          - '4'
+          - '3'
+        synonyms:
+          - item_number
+          - row_number
+          - sequence_number
+          - line_item_number
+          - entry_number
+      - name: QUANTITY
+        expr: QUANTITY
+        data_type: NUMBER(12,2)
+        description: The quantity of the item ordered.
+        sample_values:
+          - '42.00'
+          - '17.00'
+          - '10.00'
+        synonyms:
+          - amount
+          - count
+          - volume
+          - number
+          - total
+          - units
+          - items
+          - stock
+          - inventory_level
+          - stock_quantity
+      - name: EXTENDED_PRICE
+        expr: EXTENDED_PRICE
+        data_type: NUMBER(12,2)
+        description: The total price of an order item after applying any discounts or promotions, calculated by multiplying the unit price by the quantity ordered.
+        sample_values:
+          - '23815.68'
+          - '5129.20'
+          - '56294.28'
+        synonyms:
+          - total_price
+          - subtotal
+          - item_total
+          - price_extension
+          - calculated_price
+          - total_cost
+          - price_before_discount
+      - name: DISCOUNT
+        expr: DISCOUNT
+        data_type: NUMBER(12,2)
+        description: The percentage discount applied to an order item.
+        sample_values:
+          - '0.07'
+          - '0.05'
+          - '0.01'
+        synonyms:
+          - rebate
+          - discount_amount
+          - price_reduction
+          - markdown
+          - price_cut
+          - concession
+          - discount_percentage
+      - name: TAX
+        expr: TAX
+        data_type: NUMBER(12,2)
+        description: The percentage of tax applied to an order item.
+        sample_values:
+          - '0.07'
+          - '0.05'
+          - '0.03'
+        synonyms:
+          - sales_tax
+          - vat
+          - value_added_tax
+          - duty
+          - levy
+          - surcharge
+          - tariff
+          - impost
+      - name: DISCOUNTED_PRICE
+        expr: DISCOUNTED_PRICE
+        data_type: NUMBER(25,4)
+        description: The discounted price of an order item after any applicable discounts have been applied.
+        sample_values:
+          - '62430.5745'
+          - '56834.3754'
+          - '13131.8915'
+        synonyms:
+          - price_after_discount
+          - discounted_amount
+          - sale_price
+          - reduced_price
+          - discounted_cost
+          - price_with_discount
+      - name: FINAL_PRICE
+        expr: FINAL_PRICE
+        data_type: NUMBER(38,6)
+        description: The total price paid by the customer for the order item after all discounts and promotions have been applied.
+        sample_values:
+          - '54136.442880'
+          - '17073.953280'
+          - '36032.823960'
+        synonyms:
+          - total_cost
+          - total_amount
+          - final_amount
+          - total_price
+          - overall_price
+          - grand_total
+          - sale_price
+          - transaction_amount
+relationships:
+  - name: ORDER_TO_CUSTOMER
+    left_table: FACT_ORDER
+    right_table: DIM_CUSTOMER
+    relationship_columns:
+      - left_column: CUSTOMER_KEY
+        right_column: CUSTOMER_KEY
+    relationship_type: many_to_one
+    join_type: inner
+  - name: ORDER_TO_ORDER
+    left_table: FACT_ORDER
+    right_table: DIM_ORDER
+    relationship_columns:
+      - left_column: ORDER_KEY
+        right_column: ORDER_KEY
+    relationship_type: many_to_one
+    join_type: inner
+  - name: ORDER_ITEM_TO_ORDER
+    join_type: inner
+    relationship_type: many_to_one
+    left_table: FACT_ORDER_ITEM
+    relationship_columns:
+      - left_column: ORDER_KEY
+        right_column: ORDER_KEY
+    right_table: DIM_ORDER
+  - name: ORDER_ITEM_TO_CUSTOMER
+    join_type: inner
+    relationship_type: many_to_one
+    left_table: FACT_ORDER_ITEM
+    relationship_columns:
+      - left_column: CUSTOMER_KEY
+        right_column: CUSTOMER_KEY
+    right_table: DIM_CUSTOMER
+  - name: ORDER_ITEM_TO_PART
+    join_type: inner
+    relationship_type: many_to_one
+    left_table: FACT_ORDER_ITEM
+    relationship_columns:
+      - left_column: PART_KEY
+        right_column: PART_KEY
+    right_table: DIM_PART
+  - name: ORDER_ITEM_TO_SUPPLIER
+    join_type: inner
+    relationship_type: many_to_one
+    left_table: FACT_ORDER_ITEM
+    relationship_columns:
+      - left_column: SUPPLIER_KEY
+        right_column: SUPPLIER_KEY
+    right_table: DIM_SUPPLIER

@@ -1,0 +1,16 @@
+dbt_quickstart:
+
+  target: local
+  outputs:
+    local:
+      account: <snowflake_account>
+      database: SANDBOX
+      role: transform_role
+      schema: <developer_name>
+      threads: 8
+      type: snowflake
+      user: <user_id>
+      warehouse: transform_wh_xs
+
+      # SSO config
+      authenticator: externalbrowser

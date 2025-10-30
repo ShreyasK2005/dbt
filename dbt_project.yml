@@ -1,0 +1,90 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'dbt_quickstart'
+version: '1.0.0'
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'dbt_quickstart'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+flags:
+  partial-parse: "false"
+
+vars:
+  # Larger warehouse name for bigger tasks
+  large_task_wh: 'transform_wh_s'
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+models:
+  dbt_quickstart:
+    +transient: false
+    # Config indicated by + and applies to all files under models/example/
+    ods:
+      +materialized: table
+      +database: ODS
+      erp:
+        +schema: ERP
+    
+    dw:
+      +materialized: table
+      +database: DW
+      orders:
+        +schema: ORDERS
+      enterprise:
+        +schema: ENTERPRISE
+
+    bi:
+      +materialized: view
+      +database: BI
+      enterprise:
+        +schema: ENTERPRISE
+
+    ode:
+      +materialized: view
+      +database: ODE
+
+    sandbox:
+      +materialized: table
+      +database: SANDBOX
+      sample:
+        +schema: SAMPLE
+    
+    orderCheck:
+      +materialized: table
+      +database: SANDBOX
+      sample:
+        +schema: SAMPLE
+
+seeds:
+  dbt_quickstart:
+    +transient: false
+    excel:
+      +database: INT
+      +schema: EXCEL
+
+snapshots:
+  dbt_quickstart:
+    int:
+      +snapshot_meta_column_names:
+        dbt_valid_from: ods_hist_eff_from_datetime
+        dbt_valid_to: ods_hist_eff_to_datetime
+        dbt_scd_id: ods_hist_row_key
+        dbt_updated_at: ods_hist_updated_datetime
+        dbt_is_deleted: ods_hist_is_deleted_flag

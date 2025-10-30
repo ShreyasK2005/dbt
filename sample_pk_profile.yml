@@ -1,0 +1,18 @@
+dbt_quickstart:
+
+  target: local
+  outputs:
+    local:
+      account: <snowflake_account>
+      database: SANDBOX
+      role: transform_role
+      schema: <developer_name>
+      threads: 8
+      type: snowflake
+      user: <user_id>
+      warehouse: transform_wh_xs
+
+      # Keypair config
+      private_key_path: <private_key_path>
+      # or private_key instead of private_key_path
+      private_key_passphrase: <private_key_passphrase>
